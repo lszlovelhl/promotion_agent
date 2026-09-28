@@ -1,0 +1,13 @@
+# 推广申请处理 Agent - 一键容器编排
+# 用法: docker compose up -d  → 打开 http://localhost:8889
+services:
+  promotion-agent:
+    build: .
+    container_name: promotion-agent
+    ports:
+      - "8889:8889"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/app/data          # 飞书配置 / records.json / 幂等指纹
+    restart: unless-stopped

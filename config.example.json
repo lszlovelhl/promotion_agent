@@ -1,0 +1,8 @@
+{
+  "app_id": "cli_xxxx",
+  "app_secret": "填写飞书应用密钥",
+  "app_token": "填写飞书多维表格 token",
+  "table_id": "填写数据表 id",
+  "llm_api_key": "填写火山方舟 API Key",
+  "llm_model": "填写模型接入点 ep-xxxxx"
+}

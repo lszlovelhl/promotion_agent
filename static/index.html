@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>推广申请处理平台 - 管理后台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  background: #f5f7fa;
+  color: #1d2129;
+  line-height: 1.6;
+}
+body.dark { background: #0d1117; color: #e6edf3; }
+
+/* 顶部导航 */
+.topbar {
+  background: #fff;
+  padding: 0 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+body.dark .topbar { background: #161b22; box-shadow: none; border-bottom: 1px solid #30363d; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { font-size: 24px; }
+.logo-text { font-size: 18px; font-weight: 600; }
+
+/* 标签页 */
+.tabs { display: flex; gap: 4px; }
+.tab {
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #4e5969;
+  transition: all 0.2s;
+}
+.tab:hover { background: #f2f3f5; }
+.tab.active { background: #e8f3ff; color: #165dff; font-weight: 500; }
+body.dark .tab { color: #8b949e; }
+body.dark .tab:hover { background: #21262d; }
+body.dark .tab.active { background: #1c2128; color: #58a6ff; }
+
+/* 主内容区 */
+.main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+body.dark .card { background: #161b22; box-shadow: none; border: 1px solid #30363d; }
+
+/* 统计卡片 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+body.dark .stat-card { background: #161b22; box-shadow: none; border: 1px solid #30363d; }
+.stat-label { font-size: 13px; color: #86909c; margin-bottom: 8px; }
+body.dark .stat-label { color: #8b949e; }
+.stat-value { font-size: 28px; font-weight: 600; }
+.stat-value.blue { color: #165dff; }
+.stat-value.green { color: #00b42a; }
+.stat-value.orange { color: #ff7d00; }
+.stat-value.red { color: #f53f3f; }
+
+/* 表格 */
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #f2f3f5;
+  font-size: 14px;
+}
+body.dark .table th, body.dark .table td { border-bottom: 1px solid #30363d; }
+.table th { color: #86909c; font-weight: 500; }
+body.dark .table th { color: #8b949e; }
+
+/* 标签 */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.badge-blue { background: #e8f3ff; color: #165dff; }
+.badge-green { background: #e8ffea; color: #00b42a; }
+.badge-orange { background: #fff7e8; color: #ff7d00; }
+.badge-red { background: #ffece8; color: #f53f3f; }
+body.dark .badge-blue { background: #1c2128; color: #58a6ff; }
+body.dark .badge-green { background: #1c2128; color: #3fb950; }
+body.dark .badge-orange { background: #1c2128; color: #d29922; }
+body.dark .badge-red { background: #1c2128; color: #f85149; }
+
+/* 按钮 */
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary { background: #165dff; color: #fff; }
+.btn-primary:hover { background: #0e4bdb; }
+.btn-success { background: #00b42a; color: #fff; }
+.btn-success:hover { background: #009a24; }
+.btn-danger { background: #f53f3f; color: #fff; }
+.btn-danger:hover { background: #d9363e; }
+.btn-secondary { background: #f2f3f5; color: #4e5969; }
+.btn-secondary:hover { background: #e5e6eb; }
+body.dark .btn-secondary { background: #21262d; color: #8b949e; }
+body.dark .btn-secondary:hover { background: #30363d; }
+
+/* 表单 */
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; margin-bottom: 6px; font-size: 14px; color: #4e5969; }
+body.dark .form-label { color: #8b949e; }
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e6eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  color: #1d2129;
+}
+body.dark .form-input { background: #0d1117; border-color: #30363d; color: #e6edf3; }
+.form-input:focus { outline: none; border-color: #165dff; }
+
+/* 页面切换 */
+.page { display: none; }
+.page.active { display: block; }
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #86909c;
+}
+body.dark .empty { color: #8b949e; }
+
+/* 提示框 */
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.alert-warning { background: #fff7e8; color: #ff7d00; border: 1px solid #ffd591; }
+.alert-error { background: #ffece8; color: #f53f3f; border: 1px solid #fbaca3; }
+.alert-success { background: #e8ffea; color: #00b42a; border: 1px solid #b7eb8f; }
+body.dark .alert-warning { background: #1c2128; border-color: #d29922; }
+body.dark .alert-error { background: #1c2128; border-color: #f85149; }
+body.dark .alert-success { background: #1c2128; border-color: #3fb950; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="logo-icon">📊</span>
+    <span class="logo-text">推广申请处理平台</span>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-page="dashboard">仪表盘</div>
+    <div class="tab" data-page="records">申请记录</div>
+    <div class="tab" data-page="pending">待处理</div>
+    <div class="tab" data-page="config">系统配置</div>
+    <div class="tab" data-page="test">手动测试</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- 仪表盘 -->
+  <div class="page active" id="page-dashboard">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">机器人状态</div>
+        <div class="stat-value" id="bot-status">
+          <span style="color: #f59e0b;">● 检测中</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">累计总金额</div>
+        <div class="stat-value blue" id="total-amount">¥0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">累计申请笔数</div>
+        <div class="stat-value green" id="total-count">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">覆盖博主数</div>
+        <div class="stat-value orange" id="total-bloggers">0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">📈 最近处理记录</h3>
+      <div id="dashboard-recent">
+        <div class="empty">暂无数据，等待群里提交申请</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 申请记录 -->
+  <div class="page" id="page-records">
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">📋 所有申请记录</h3>
+      <div id="records-list">
+        <div class="empty">暂无记录</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 待处理 -->
+  <div class="page" id="page-pending">
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">⚠️ 待人工确认</h3>
+      <div id="pending-list">
+        <div class="empty">暂无待处理事项</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 系统配置 -->
+  <div class="page" id="page-config">
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">⚙️ 飞书机器人配置</h3>
+      <div class="form-group">
+        <label class="form-label">App ID</label>
+        <input class="form-input" id="cfg-app-id" placeholder="cli_xxxx">
+      </div>
+      <div class="form-group">
+        <label class="form-label">App Secret</label>
+        <input class="form-input" id="cfg-app-secret" type="password" placeholder="App Secret">
+      </div>
+      <div class="form-group">
+        <label class="form-label">多维表格 App Token</label>
+        <input class="form-input" id="cfg-app-token" placeholder="https://xxx.feishu.cn/base/xxx">
+      </div>
+      <div class="form-group">
+        <label class="form-label">数据表 ID</label>
+        <input class="form-input" id="cfg-table-id" placeholder="tblxxxx">
+      </div>
+      <div class="form-group">
+        <label class="form-label">告警管理员 Open ID（选填）</label>
+        <input class="form-input" id="cfg-admin-id" placeholder="ou_xxxx，填了异常告警会自动@他">
+      </div>
+      <button class="btn btn-primary" onclick="saveConfig()">保存配置</button>
+      <button class="btn btn-secondary" onclick="testLark()">测试连接</button>
+      <button class="btn btn-warning" onclick="restartBot()" style="background: #f59e0b; color: white;">🔄 重启机器人</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">🤖 LLM 配置</h3>
+      <div class="alert alert-success">✅ LLM已接入：豆包 Seed 2.0 Lite</div>
+      <div class="form-group">
+        <label class="form-label">API Key</label>
+        <input class="form-input" id="cfg-llm-key" type="password" placeholder="ark-xxxx">
+      </div>
+      <div class="form-group">
+        <label class="form-label">模型接入点ID</label>
+        <input class="form-input" id="cfg-llm-model" placeholder="ep-xxxx">
+      </div>
+      <button class="btn btn-primary" onclick="saveLlmConfig()">保存LLM配置</button>
+    </div>
+  </div>
+
+  <!-- 手动测试 -->
+  <div class="page" id="page-test">
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">🧪 手动测试（管理员调试用）</h3>
+      <p style="color: #86909c; margin-bottom: 16px;">日常使用请在飞书群里@机器人，这里仅用于调试</p>
+      <div class="form-group">
+        <label class="form-label">申请文本</label>
+        <textarea class="form-input" id="test-text" rows="6" placeholder="粘贴申请文本..."></textarea>
+      </div>
+      <button class="btn btn-secondary" onclick="loadSample()">加载示例</button>
+      <button class="btn btn-primary" onclick="processText()">开始处理</button>
+    </div>
+
+    <div class="card" id="test-result" style="display: none;">
+      <h3 style="margin-bottom: 16px;">处理结果</h3>
+      <div id="result-content"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// 标签页切换
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('page-' + tab.dataset.page).classList.add('active');
+  });
+});
+
+// 加载配置
+async function loadConfig() {
+  const res = await fetch('/api/config');
+  const data = await res.json();
+  document.getElementById('cfg-app-id').value = data.app_id || '';
+  document.getElementById('cfg-app-token').value = data.app_token || '';
+  document.getElementById('cfg-table-id').value = data.table_id || '';
+  document.getElementById('cfg-admin-id').value = data.admin_open_id || '';
+}
+
+// 保存配置
+async function saveConfig() {
+  const data = {
+    app_id: document.getElementById('cfg-app-id').value,
+    app_secret: document.getElementById('cfg-app-secret').value,
+    app_token: document.getElementById('cfg-app-token').value,
+    table_id: document.getElementById('cfg-table-id').value,
+    admin_open_id: document.getElementById('cfg-admin-id').value,
+  };
+  const res = await fetch('/api/config', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  });
+  const result = await res.json();
+  alert(result.message);
+}
+
+// 测试飞书连接
+async function testLark() {
+  const res = await fetch('/api/lark/test', {method: 'POST'});
+  const data = await res.json();
+  alert(data.message);
+}
+
+// 重启机器人
+async function restartBot() {
+  if (!confirm('确定要重启飞书机器人连接吗？')) return;
+  const res = await fetch('/api/bot/restart', {method: 'POST'});
+  const data = await res.json();
+  alert(data.message);
+  setTimeout(loadBotStatus, 2000);
+}
+
+// 加载示例
+function loadSample() {
+  document.getElementById('test-text').value = `【抖加金额统计】今日已支付：¥700（2026-09-02）
+明细如下：
+歌名：《你是我的仰望》- 博主名：初秋 - 金额：¥300（分 3 笔）
+歌名：《你是我的仰望》- 博主名：艳红 - 金额：¥200（分 2 笔）
+歌名：《你是我的仰望》- 博主名：唐山第一女泵工 - 金额：¥100
+歌名：《你是我的仰望》- 博主名：戎大姨 - 金额：¥100
+
+今日共 7 笔支付申请，合并同博主后为 4 笔。
+抖加支付人：爆火音乐`;
+}
+
+// 处理文本
+async function processText() {
+  const text = document.getElementById('test-text').value;
+  const res = await fetch('/api/process', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text})
+  });
+  const data = await res.json();
+  
+  document.getElementById('test-result').style.display = 'block';
+  
+  let html = '';
+  const summary = data.extracted.summary;
+  const validation = data.validation;
+  
+  html += `<p>歌曲：${summary.song_name}</p>`;
+  html += `<p>总金额：¥${summary.total_amount}</p>`;
+  html += `<p>明细数：${summary.detail_count}</p>`;
+  html += `<p>校验：${validation.is_valid ? '✅ 通过' : '❌ 有错误'}</p>`;
+  
+  if (validation.warnings.length > 0) {
+    html += '<p>警告：</p><ul>';
+    validation.warnings.forEach(w => {
+      html += `<li>⚠️ ${w.message}</li>`;
+    });
+    html += '</ul>';
+  }
+  
+  document.getElementById('result-content').innerHTML = html;
+}
+
+// 加载机器人状态
+async function loadBotStatus() {
+  try {
+    const res = await fetch('/api/bot/status');
+    const data = await res.json();
+    const el = document.getElementById('bot-status');
+    if (data.running) {
+      el.innerHTML = '<span style="color: #10b981;">● 运行中</span>';
+    } else {
+      el.innerHTML = '<span style="color: #ef4444;">● 已停止</span>';
+    }
+  } catch (e) {
+    document.getElementById('bot-status').innerHTML = '<span style="color: #f59e0b;">● 检测失败</span>';
+  }
+}
+
+// 加载申请记录
+async function loadRecords() {
+  try {
+    const res = await fetch('/api/records');
+    const data = await res.json();
+    const records = data.records || [];
+    
+    // 更新仪表盘统计
+    const totalAmount = records.reduce((sum, r) => sum + (r.amount || 0), 0);
+    const bloggers = new Set(records.map(r => r.blogger_name));
+    document.getElementById('total-amount').textContent = `¥${totalAmount.toLocaleString()}`;
+    document.getElementById('total-count').textContent = records.length;
+    document.getElementById('total-bloggers').textContent = bloggers.size;
+    
+    // 更新申请记录列表
+    const el = document.getElementById('records-list');
+    if (records.length === 0) {
+      el.innerHTML = '<div class="empty">暂无记录</div>';
+    } else {
+      records.reverse();
+      let html = '<table style="width:100%; border-collapse: collapse; font-size: 14px;">';
+      html += '<tr style="border-bottom: 2px solid #e5e7eb; text-align: left;">';
+      html += '<th style="padding: 8px;">博主名</th>';
+      html += '<th style="padding: 8px;">类型</th>';
+      html += '<th style="padding: 8px;">金额</th>';
+      html += '<th style="padding: 8px;">支付人</th>';
+      html += '<th style="padding: 8px;">日期</th>';
+      html += '</tr>';
+      
+      records.forEach(r => {
+        const type = r.app_type === 'douyin_ad' ? '抖加' : '垫付';
+        const typeColor = r.app_type === 'douyin_ad' ? '#3b82f6' : '#10b981';
+        html += `<tr style="border-bottom: 1px solid #f3f4f6;">`;
+        html += `<td style="padding: 8px;">${r.blogger_name}</td>`;
+        html += `<td style="padding: 8px; color: ${typeColor};">${type}</td>`;
+        html += `<td style="padding: 8px;">¥${r.amount.toLocaleString()}</td>`;
+        html += `<td style="padding: 8px;">${r.payer || '-'}</td>`;
+        html += `<td style="padding: 8px;">${r.date || '-'}</td>`;
+        html += `</tr>`;
+      });
+      html += '</table>';
+      el.innerHTML = html;
+    }
+    
+    // 更新仪表盘最近记录
+    const recentEl = document.getElementById('dashboard-recent');
+    if (records.length === 0) {
+      recentEl.innerHTML = '<div class="empty">暂无数据，等待群里提交申请</div>';
+    } else {
+      const recent = records.slice(-5).reverse();
+      let html = '<ul style="list-style: none; padding: 0;">';
+      recent.forEach(r => {
+        const type = r.app_type === 'douyin_ad' ? '抖加' : '垫付';
+        html += `<li style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">`;
+        html += `<strong>${r.blogger_name}</strong> · ${type} ¥${r.amount} · ${r.payer || ''} · ${r.date || ''}`;
+        html += `</li>`;
+      });
+      html += '</ul>';
+      recentEl.innerHTML = html;
+    }
+  } catch (e) {
+    console.error('加载记录失败', e);
+  }
+}
+
+// 加载待处理记录
+async function loadPending() {
+  try {
+    const res = await fetch('/api/pending');
+    const data = await res.json();
+    const pending = data.pending || [];
+    const el = document.getElementById('pending-list');
+    
+    if (pending.length === 0) {
+      el.innerHTML = '<div class="empty">暂无待处理事项</div>';
+      return;
+    }
+    
+    let html = '<ul style="list-style: none; padding: 0;">';
+    pending.forEach(p => {
+      html += `<li style="padding: 12px; border: 1px solid #f59e0b; border-radius: 8px; margin-bottom: 8px;">`;
+      html += `<strong>待确认申请</strong>`;
+      html += `<div style="font-size: 13px; color: #666; margin-top: 4px;">涉及 ${p.blogger_count} 位博主，${p.warnings} 个待确认问题</div>`;
+      html += `</li>`;
+    });
+    html += '</ul>';
+    el.innerHTML = html;
+  } catch (e) {
+    console.error('加载待处理失败', e);
+  }
+}
+
+// 切换标签时加载数据
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const page = tab.dataset.page;
+    if (page === 'records') {
+      loadRecords();
+    }
+    if (page === 'pending') {
+      loadPending();
+    }
+  });
+});
+
+// 初始化
+loadConfig();
+loadBotStatus();
+loadRecords();
+loadPending();
+setInterval(loadBotStatus, 5000);  // 每5秒刷新一次
+setInterval(loadRecords, 10000);  // 每10秒刷新记录
+setInterval(loadPending, 5000);  // 每5秒刷新待处理
+</script>
+
+</body>
+</html>
